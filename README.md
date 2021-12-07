@@ -11,7 +11,7 @@ To use these scripts correctly please make sure you understand and have applied 
 That's it :)
 
 ### Note
-- The python script is currently written in a way which will just keep adding world back-ups to the `minecraft-backups` folder. I will be adding a limit of 2 weeks worth of back-ups later on.
+- The python script is written so the back-ups in the `minecraft-backups` folder are automatically deleted if they are older than 2 weeks.
 - The chron job's minimum frequency *must* at least be daily, anything less than that and the backups for that day will be overriden.
 
 ## Directory Map Example
