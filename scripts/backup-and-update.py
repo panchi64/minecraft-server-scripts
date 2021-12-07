@@ -6,7 +6,7 @@ import json
 import re
 
 # For back-up folder name automation
-from datetime import date
+import datetime
 
 # For directory traversal and terminal command calls 
 import os
@@ -32,7 +32,7 @@ latest_link = ""
 latest_jar_name = ""
 latest_hashcode = ""
 
-# Returns a string containing the path a given amount of directories above
+# Returns a string containing the path a given amount of directories above the given directory
 def go_up_directory(directory, amount):
     # Make a list of all the directories leading up the given one, cleaning up the empty values just in case something weird happens
     items = directory.split("/")
@@ -53,43 +53,13 @@ py_dir = os.path.dirname(os.path.realpath(__file__))
 server_dir = go_up_directory(py_dir, 1)
 backup_dir = go_up_directory(server_dir, 1) + "/minecraft-backups"
 
-# Expected directory map
-#   minecraft-backups/
-#   minecraft-server/
-#       -> cache/...
-#       -> libraries/...
-#       -> logs/...
-#       -> plugins/...
-#       -> scripts/
-#           -> backup-and-update.py
-#           -> start.sh
-#       -> versions/...
-#       -> world/...
-#       -> world_nether/...
-#       -> world_the_end/...
-#       -> banned-ips.json
-#       -> banned-players.json
-#       -> bukkit.yml
-#       -> commands.yml
-#       -> eula.txt
-#       -> help.yml
-#       -> ops.json
-#       -> paper.yml
-#       -> paper-1.x.x.jar
-#       -> permissions.yml
-#       -> server.properties
-#       -> spigot.yml
-#       -> usercache.json
-#       -> version_history.json
-#       -> whitelist.json
-
-# Starts the minecraft server
+# Starts the paper minecraft server
 def start_server():
     # Attempt to start the screen session for the server
     subprocess.run("scripts/start.sh", cwd=server_dir, shell=True)
     print("-> Server started")
 
-# Stops the minecraft server
+# Stops the paper minecraft server
 def stop_server():
     subprocess.run("screen -S mcServer -p 0 -X stuff 'stop^M'", shell=True)
     print("-> Server shutdown")
@@ -99,7 +69,7 @@ def back_up_server():
     # Create a folder for the latest back-up
     if(os.path.exists(backup_dir)):
         # Generate the back-up folder name and directory
-        folder_name = date.today().strftime("%b-%d-%Y")
+        folder_name = datetime.date.today().strftime("%b-%d-%Y")
         folder_dir = backup_dir + "/" + folder_name
 
         # Create the back-up folder
@@ -117,6 +87,19 @@ def back_up_server():
                 subprocess.run("cp -R " + file_name + " " + folder_dir , cwd=server_dir, shell=True)
                 print("-> Backed up " + file_name)
 
+        # Remove folders older than 2 weeks
+        for folder_name in os.listdir(backup_dir):
+            # Get the current folder date (if there is any) and set a time limit of 14 days ago
+            try:
+                folder_date = datetime.datetime.strptime(folder_name, "%b-%d-%Y")
+            except:
+                continue
+
+            date_limit = datetime.datetime.now() - datetime.timedelta(days=14)
+
+            # Compare dates and if the folder date is older than the limit remove it
+            if(date_limit > folder_date):
+                subprocess.run("rm -r " + folder_name, cwd=backup_dir, shell=True)
     else:
         # Create the back-up directory and re-call the function so that it creates the folder and stores the backups
         os.mkdir(backup_dir)
@@ -189,7 +172,7 @@ def latest_is_newer():
         return True
     
     # If current is equal to latest, or for some reason current is newer than latest then return false
-    print("-> Current version >= API version")
+    print("-> Current version >= API version\n")
     return False
 
 # Updates the current 
@@ -247,7 +230,7 @@ print("Backing up the server...")
 back_up_server()
 print("")
 
-# Check for any updates
+# Check for any updates and update if there is a newer version
 print("Checking for updates...")
 if(latest_is_newer()):
     print("-> Update found, updating server...")
