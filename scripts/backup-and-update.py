@@ -180,7 +180,7 @@ def update_sh(jar_name):
     # Read throughout the file, copy the contents into a variable and update the JAR file name within that variable
     sh_script = open(py_dir + "/" + "start.sh", "rt")
     code = sh_script.read()
-    code = code.replace(current_jar_name, latest_jar_name)
+    code = code.replace(server_dir + "/" + current_jar_name, server_dir + "/" + latest_jar_name)
     sh_script.close()
 
     # Rewrite the file with the variable that contains the new JAR file name
@@ -192,7 +192,7 @@ def update_sh(jar_name):
 def update_server():
     # Trigger a download of the latest JAR file, wait until it is done downloading and verify its integrity (by hashing it and comparing hashes)
     subprocess.run("wget " + latest_link, cwd=server_dir, shell=True)
-    download_hash = hashlib.sha256(open(server_dir + "/" +latest_jar_name, "rb").read()).hexdigest()
+    download_hash = hashlib.sha256(open(server_dir + "/" + latest_jar_name, "rb").read()).hexdigest()
 
     # If both hashes are identical
     if(latest_hashcode == download_hash):
@@ -210,7 +210,7 @@ def update_server():
 get_current_info()
 print("Current version info:")
 print("-> Version: " + current_version)
-print("-> Build: "+ str(current_build))
+print("-> Build: " + str(current_build))
 print("-> JAR: " + current_jar_name)
 print("")
 
