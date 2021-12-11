@@ -6,7 +6,8 @@ To use these scripts correctly please make sure you understand and have applied 
 - *These scripts are specifically made for servers using PaperMC*
 
 1. Edit **line 25** of the `spigot.yml` file to say: `restart-script: ./scripts/start.sh`
-2. Make a chron job that runs the python file whenever you want.
+2. In the `start.sh` script change the `/path/to/jar/` to the path where your minecraft server jar is found (also remove the brackets, they are there to help you identify what you have to change).
+3. Make a chron job that runs the python file whenever you want.
 
 That's it :)
 
