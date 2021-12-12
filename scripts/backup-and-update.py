@@ -11,6 +11,7 @@ import datetime
 # For directory traversal and terminal command calls 
 import os
 import subprocess
+import time
 
 # For downloaded file integrity check
 import hashlib
@@ -61,7 +62,16 @@ def start_server():
 
 # Stops the paper minecraft server
 def stop_server():
+    # Send the stop command
     subprocess.run("screen -S mcServer -p 0 -X stuff 'stop^M'", shell=True)
+
+    # Wait until the server is fully closed
+    while True:
+        if(subprocess.call("screen -ls | grep mcServer", shell=True, stdout=subprocess.DEVNULL) == 1):
+            break 
+        print("-> Waiting for server to shutdown...")
+        time.sleep(1)
+
     print("-> Server shutdown")
 
 # Backs up the minecraft server world
