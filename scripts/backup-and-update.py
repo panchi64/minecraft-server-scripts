@@ -170,6 +170,7 @@ def get_api_info():
     return link
 
 # Returns True if the latest version (from the API) is newer than the current version
+# NOTE: There may be a comparison issue between the current version and the latest version, as they are being compared as strings
 def latest_is_newer():
     latest_version = re.search(jar_version_regex, latest_jar_name).group()
     latest_build = re.search(jar_build_regex, latest_jar_name).group().replace(".jar", "")
@@ -178,7 +179,7 @@ def latest_is_newer():
     if(current_version != latest_version and latest_version > current_version):
         return True
     # Otherwise if the versions are the same but the latest build is bigger than the current, then yes, the latest is newer
-    elif(current_version == latest_version and latest_build > current_build):
+    elif(current_version == latest_version and int(latest_build) > int(current_build)):
         return True
     
     # If current is equal to latest, or for some reason current is newer than latest then return false
