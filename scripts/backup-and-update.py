@@ -4,6 +4,7 @@ import json
 
 # For file information parsing
 import re
+from packaging import version
 
 # For back-up folder name automation
 import datetime
@@ -125,7 +126,7 @@ def get_current_info():
 
             # Inhabit the current server version global variable
             global current_version
-            current_version = re.search(jar_version_regex, file_name).group()
+            current_version = version.parse(re.search(jar_version_regex, file_name).group())
 
             # Inhabit the current build global variable
             global current_build
@@ -170,9 +171,8 @@ def get_api_info():
     return link
 
 # Returns True if the latest version (from the API) is newer than the current version
-# NOTE: There may be a comparison issue between the current version and the latest version, as they are being compared as strings
 def latest_is_newer():
-    latest_version = re.search(jar_version_regex, latest_jar_name).group()
+    latest_version = version.parse(re.search(jar_version_regex, latest_jar_name).group())
     latest_build = re.search(jar_build_regex, latest_jar_name).group().replace(".jar", "")
 
     # If the versions differ and the latest version is larger than the current version, then yes, the latest is newer
@@ -220,7 +220,7 @@ def update_server():
 # Update the current version global variables
 get_current_info()
 print("Current version info:")
-print("-> Version: " + current_version)
+print("-> Version: " + str(current_version))
 print("-> Build: " + str(current_build))
 print("-> JAR: " + current_jar_name)
 print("")
