@@ -13,7 +13,7 @@ To use these scripts correctly please make sure you understand the following and
 2. In the `start.sh` script change the `/path/to/jar/` to the path where your minecraft server jar is found (also remove the brackets, they are there to help you identify what you have to change).
 3. Make sure to install all python library dependencies, this can be done by using the following command:
    - `pip3 install [dependency]` (if pip3 doesn't work try with pip)
-   - List of dependencies:
+   - List of dependencies (some of these may "fail" because they come preinstalled with python):
       - request
       - json
       - re
