@@ -1,10 +1,14 @@
-# Installation
+# Minecraft Server Automation Scripts
 To use these scripts correctly please make sure you understand the following and have applied 4 things:
-- The main server files are encompassed within a folder
-- These scripts need to be contained within their own folder, named `scripts`, *within* the server files folder
-- The python script will create a folder named 'minecraft-backups' right next to the folder where the server files are stored
+- The main server files should be placed within a folder (*see directory map example section for more detail*).
+- The scripts need to be contained in their own folder, named `scripts`, *within* the server files folder.
+- The python script will create a folder named `minecraft-backups` beside the folder where the server files are stored.
+- The script will only provide a backup of the past 7 days, deleting any backups later than that time period.
+- The script can be run as frequently as desired, however if run more than once a day it will overwrite that day's server backup.
+- The script will update the server to the latest version and build provided by the API of PaperMC.
 - *These scripts are specifically made for servers using PaperMC*
 
+## Setup
 1. Edit **line 25** of the `spigot.yml` file to say: `restart-script: ./scripts/start.sh`
 2. In the `start.sh` script change the `/path/to/jar/` to the path where your minecraft server jar is found (also remove the brackets, they are there to help you identify what you have to change).
 3. Make sure to install all python library dependencies, this can be done by using the following command:
@@ -22,10 +26,6 @@ To use these scripts correctly please make sure you understand the following and
 4. Make a chron job that runs the python file whenever you want.
 
 That's it :)
-
-### Note
-- The python script is written so the back-ups in the `minecraft-backups` folder are automatically deleted if they are older than 2 weeks.
-- The chron job's minimum frequency *must* at least be daily, anything less than that and the backups for that day will be overriden.
 
 ## Directory Map Example
 - minecraft-backups/
