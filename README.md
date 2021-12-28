@@ -1,5 +1,5 @@
 # Installation
-To use these scripts correctly please make sure you understand and have applied 3 things:
+To use these scripts correctly please make sure you understand the following and have applied 4 things:
 - The main server files are encompassed within a folder
 - These scripts need to be contained within their own folder, named `scripts`, *within* the server files folder
 - The python script will create a folder named 'minecraft-backups' right next to the folder where the server files are stored
@@ -7,7 +7,19 @@ To use these scripts correctly please make sure you understand and have applied 
 
 1. Edit **line 25** of the `spigot.yml` file to say: `restart-script: ./scripts/start.sh`
 2. In the `start.sh` script change the `/path/to/jar/` to the path where your minecraft server jar is found (also remove the brackets, they are there to help you identify what you have to change).
-3. Make a chron job that runs the python file whenever you want.
+3. Make sure to install all python library dependencies, this can be done by using the following command:
+   - `pip3 install [dependency]` (if pip3 doesn't work try with pip)
+   - List of dependencies:
+      - request
+      - json
+      - re
+      - packaging
+      - datetime
+      - os
+      - subprocess
+      - time
+      - hashlib
+4. Make a chron job that runs the python file whenever you want.
 
 That's it :)
 
