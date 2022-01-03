@@ -96,9 +96,10 @@ def back_up_server():
         for file_name in os.listdir(server_dir):
             if re.match("world", file_name):
                 subprocess.run("cp -R " + file_name + " " + folder_dir , cwd=server_dir, shell=True)
-                print("-> Backed up " + file_name)
+                print("--> Backed up " + file_name)
 
-        # Remove folders older than 2 weeks
+        # Remove folders older than 1 week
+        print("-> Removing old back-ups...")
         for folder_name in os.listdir(backup_dir):
             # Get the current folder date (if there is any) and set a time limit of 14 days ago
             try:
@@ -106,11 +107,12 @@ def back_up_server():
             except:
                 continue
 
-            date_limit = datetime.datetime.now() - datetime.timedelta(days=14)
+            date_limit = datetime.datetime.now() - datetime.timedelta(days=7)
 
             # Compare dates and if the folder date is older than the limit remove it
             if(date_limit > folder_date):
                 subprocess.run("rm -r " + folder_name, cwd=backup_dir, shell=True)
+        print("-> Old back-ups removed")
     else:
         # Create the back-up directory and re-call the function so that it creates the folder and stores the backups
         os.mkdir(backup_dir)
@@ -147,12 +149,13 @@ def get_api_info():
     # Get the available versions of Minecraft from PaperMC
     aVJSON = get_json_from_api("")
     latestVersion = get_last_value_in_key(aVJSON, "versions")
-    print("The latest available Minecraft version from PaperMC is: " + latestVersion)
+    print("Latest version info: ")
+    print("-> Version: " + latestVersion)
     
     # Get the available builds of the latest version of Minecraft from PaperMC
     aBJSON = get_json_from_api("versions/" + latestVersion)
     latestBuild = get_last_value_in_key(aBJSON, "builds")
-    print("The latest build of this version is: " + str(latestBuild))
+    print("-> Build: " + str(latestBuild))
 
     # Get the latest build information/description
     lBDesc = get_json_from_api("versions/" + latestVersion + "/builds/" + str(latestBuild))
@@ -227,8 +230,9 @@ print("")
 
 # Get information from the API
 latest_link = get_api_info()
-print("Link to this version: " + latest_link)
-print("-> JAR: " + latest_jar_name + " \n-> SHA256: " + latest_hashcode)
+print("-> JAR: " + latest_jar_name)
+print("-> SHA256: " + latest_hashcode)
+print("-> Link to version: " + latest_link)
 print("")
 
 # Stop the server for backup and updates
